@@ -88,13 +88,14 @@ pwnStream.write_short 0xabcd
 pwnStream.read_long signed=true
 pwnStream.write_long -12345
 pwnStream.read_object
-pwnStream.ysoserial_generate!("./ysoserial.jar",
-                              "CommonsCollections2",
-                              "gnome-calculator",
-                              encode: true,
-                              windows: false)
+pwnStream.ysoserial_generate!("./ysoserial.jar","CommonsCollections2", "gnome-calculator", encode: true, windows: false)
 pwnStream.write_object(ysoserial: true)
 ```
+## PoC
+
+![poc](https://user-images.githubusercontent.com/67718634/170808392-1ce8efff-b8c6-4372-8d7a-b20b4fbeadc9.gif)
+
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
