@@ -93,6 +93,8 @@ pwnStream.write_object(ysoserial: true)
 ```
 ## PoC
 
+find a test vulnerable Java server and a Ruby ObjectPwnStream exploit in the [test](https://github.com/hakivvi/ObjectPwnStream/tree/main/spec/test) directory.
+
 ![poc](https://user-images.githubusercontent.com/67718634/170808392-1ce8efff-b8c6-4372-8d7a-b20b4fbeadc9.gif)
 
 
