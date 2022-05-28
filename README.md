@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # ObjectPwnStream
 
 a Ruby implementation of Java's `ObjectInputStream` and `ObjectOutputStream`, to ease the process of Java deserialization exploitation on custom TCP based network protocols.
@@ -29,7 +28,7 @@ the library provides a set of methods to mimic the methods of both `ObjectInputS
 
 the `readObject()` method is not always the first function run on a TCP socket, so you can't just feed the server with your serialized payload or else `java.io.StreamCorruptedException` will be thrown by the server.
 
-take this toy server for example, which does read and write a bunch of types before actually calling `readObject()` which the attacker is usually interested in:
+take this [toy server](https://github.com/hakivvi/ObjectPwnStream/blob/main/spec/test/ToyServer.java) for example, which does read and write a bunch of types before actually calling `readObject()` which the attacker is usually interested in:
 ```java
                 s = serverSock.accept();
                 System.out.println("[+] Connection accepted from " + s.getInetAddress().getHostAddress() + ":" + s.getPort());
@@ -118,6 +117,3 @@ Everyone interacting in the ObjectPwnStream project’s codebases, issue tracker
 
 - document all the functions.
 - support CLI mode.
-=======
-# ObjectPwnStream
->>>>>>> 722378df4eaf6880483a7235cdda15036bd64adb
