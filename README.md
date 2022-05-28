@@ -27,6 +27,9 @@ Or install it from main branch:
     $ git clone https://github.com/hakivvi/ObjectPwnStream
     $ cd ObjectPwnStream
     $ bundle install && bundle exec rake install
+    
+## Documentation
+See [ObjectPwnStream wiki page](https://github.com/hakivvi/ObjectPwnStream/wiki/Documentation) for a more detailed gem usage and methods documentation.
 
 ## Usage
 the library provides a set of methods to mimic the methods of both `ObjectInputStream` and `ObjectOutputStream`,
@@ -139,5 +142,5 @@ Everyone interacting in the ObjectPwnStream project’s codebases, issue tracker
 
 ## Todo
 
-- [ ] document all the functions.
+- [X] document all the functions.
 - [ ] support CLI mode.
