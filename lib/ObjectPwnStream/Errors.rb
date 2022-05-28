@@ -9,7 +9,7 @@ module ObjectPwnStream
     end
 
     class PayloadStreamHeaderError < StandardError
-      def message()="the provided serialized payload has an invalid stream header."
+      def message()="the signed: false serialized payload has an invalid stream header."
     end
 
     class YsoserialGenerateError < StandardError

